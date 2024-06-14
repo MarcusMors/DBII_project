@@ -2,7 +2,7 @@
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     line-height: 1.6;
-    background-color: #ff0000;
+    background-color: #f9f9f9;
     margin: 0;
     padding: 0;
 }
@@ -14,8 +14,8 @@ body {
 }
 
 header {
-    background-color: #ff0000;
-    color: #ff0000;
+    background-color: #000;
+    color: #fff;
     padding: 1rem 0;
     text-align: center;
 }
@@ -39,7 +39,7 @@ nav ul li {
 
 nav ul li a {
     text-decoration: none;
-    color: #ff0000;
+    color: #fff;
     font-size: 1rem;
     font-weight: bold;
     transition: color 0.3s ease;
@@ -60,7 +60,7 @@ section {
 h2 {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #ff0000;
+    color: #000;
     margin-bottom: 10px;
 }
 
@@ -72,8 +72,8 @@ ul {
 ul li {
     padding: 10px;
     margin-bottom: 10px;
-    background-color: #ff0000;
-    border: 1px solid #ff0000;
+    background-color: #fff;
+    border: 1px solid #ddd;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
