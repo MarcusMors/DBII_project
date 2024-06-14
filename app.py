@@ -44,5 +44,9 @@ def load_playlists():
 def index():
     return render_template('index.html')
 
+@app.route('/biblioteca')
+def biblioteca():
+    return render_template('biblioteca.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
