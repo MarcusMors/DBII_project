@@ -1,0 +1,18 @@
+<form action="/contacts" method="get" class="tool-bar">
+  <label for="search">Search Term</label>
+  <input id="search" type="search" name="q" value="{{ request.args.get('q') or '' }}" hx-get="/contacts"
+    hx-trigger="search, keyup delay:200ms changed" hx-target="tbody" />
+
+  <input type="submit" value="Search" />
+</form>
+
+<!-- 
+things user might search:
+another user
+playlist or music
+artist
+company or corporation?
+
+do users and artist should be treated the same? i think so
+
+-->
