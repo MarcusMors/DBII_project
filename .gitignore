@@ -1,5 +1,9 @@
 myenv
 path
+fonts
+
+**helper.py
+**aux.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

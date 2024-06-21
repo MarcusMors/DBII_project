@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>sign up</title>
+  <script src="https://unpkg.com/htmx.org@2.0.0"
+    integrity="sha384-wS5l5IKJBvK6sPTKa2WZ1js3d947pvWXbPJ1OmWfEuxLgeHcEbjUUA5i9V5ZkpCw"
+    crossorigin="anonymous"></script>
+</head>
+
+<body hx-boost="true">
+  <!--  -->
+
+  <form>
+    <h3>Sign Up</h3>
+    <p>
+      <label for="email">Email</label>
+      <input name="email" id="email" type="email" hx-post="/validate/email" hx-target="#emailError" placeholder="Email"
+        hx-trigger="change, keyup delay:200ms changed">
+      <span id="emailError"></span>
+
+      <label for="username">Username</label>
+      <input name="username" id="username" type="text" hx-post="/validate/username" hx-target="#usernameError"
+        placeholder="Username" hx-trigger="change, keyup delay:200ms changed">
+      <span id="usernameError"></span>
+    </p>
+
+    <button hx-post="/signup">Submit</button>
+  </form>
+</body>
+
+</html>

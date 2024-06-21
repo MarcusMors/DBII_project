@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, request
 from neo4j import GraphDatabase
 
 app = Flask(__name__)
@@ -27,13 +27,52 @@ def show_user_profile(user_name):
     # get user_data
     user = {"username": user_name}
     
-    return render_template('userpage.html',user=user)
+    return render_template('user_profile.html',user=user)
+
+@app.route('/signup',methods=["POST"])
+def signup_new_user():
+    print("new submission")
+    return ""
+
+@app.route('/signup')
+def signup():
+    return render_template('signup.html')
+# <!-- {{ contact.errors['email'] }} -->
+
+emails = ["alivezeh@gmail.com", "jose.vilca.campana@ucsp.edu.pe", "a@gmail.com"]
+
+@app.route('/validate/email', methods=["POST"])
+def validate_email():
+    print("here")
+    email = request.form.get("email")
+    if email in emails:
+        return "This email has been already taken."
+    else:
+        return ""
+
+usernames = ["alivezeh", "marcusmors", "tujfa"]
+
+@app.route('/validate/username', methods=["POST"])
+def validate_username():
+    print("here")
+    username = request.form.get("username")
+    if username in usernames:
+        return "This username has been already taken."
+    else:
+        return ""
+
+
 
 @app.route('/user/<song_name>')
-def show_user_profile(song_name):
+def show_song(song_name):
     user = {"username": song_name}
     
     return render_template('songpage.html',user=user)
+
+@app.route('/user/search')
+def search():
+    return render_template('songpage.html',user=user)
+
 
 
 # Rutas para cargar dinámicamente el contenido desde Neo4j
@@ -43,6 +82,12 @@ def load_featured():
     query = "MATCH (s:Song) RETURN s.name LIMIT 5"
     # result = neo4j_session.run_query(query)
     # featured_songs = [record['s.name'] for record in result]
+    featured_songs = ["song_1", "song_2", "song_3"]
+    return jsonify(items=featured_songs)
+
+@app.route('/friends/recent_likes')
+def load_friends_recent_likes():
+    # Ejemplo de consulta a Neo4j
     featured_songs = ["song_1", "song_2", "song_3"]
     return jsonify(items=featured_songs)
 

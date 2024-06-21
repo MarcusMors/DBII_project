@@ -1,4 +1,4 @@
-<form action="/contacts" method="get" class="tool-bar">
+<form action="/search" method="get" class="tool-bar">
   <label for="search">Search Term</label>
   <input id="search" type="search" name="q" value="{{ request.args.get('q') or '' }}" hx-get="/contacts"
     hx-trigger="search, keyup delay:200ms changed" hx-target="tbody" />
@@ -15,4 +15,15 @@ company or corporation?
 
 do users and artist should be treated the same? i think so
 
+-->
+
+
+<!-- 
+
+If we wanted it to create a history entry when this request happened, we would add a new attribute to the button, the hx-push-url attribute:
+
+hx-push-url="true"
+
+creo que deberiamos usarla para cuando eliminas a un amigo
+hx-confirm="Are you sure you want to delete this contact?" (1)
 -->
