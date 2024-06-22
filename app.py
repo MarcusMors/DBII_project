@@ -1,7 +1,8 @@
-from flask import Flask, jsonify, render_template, request
+from flask import Blueprint, Flask, jsonify, render_template, request
 from neo4j import GraphDatabase
 
 app = Flask(__name__)
+# main = Blueprint("main", __name__)
 
 # Configurar la conexión a Neo4j
 uri = "bolt://localhost:7687"  # Cambia localhost por la dirección de tu servidor Neo4j
@@ -62,12 +63,14 @@ def validate_username():
         return ""
 
 
-
+#### IDK WHAT TO DO WITH THIS
 @app.route('/user/<song_name>')
 def show_song(song_name):
     user = {"username": song_name}
     
     return render_template('songpage.html',user=user)
+#### IDK WHAT TO DO WITH THIS
+
 
 @app.route('/user/search')
 def search():
@@ -106,6 +109,12 @@ def index():
 @app.route('/biblioteca')
 def biblioteca():
     return render_template('biblioteca.html')
+
+
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template('errors/404.html'), 404
+
 
 if __name__ == '__main__':
     # neo4j_session = Neo4jSession(uri, user, password)
