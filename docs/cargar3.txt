@@ -1,0 +1,98 @@
+
+
+LOAD CSV WITH HEADERS FROM 'file:///DB_FINAL4.csv' AS row
+
+WITH DISTINCT split(row.artist_names, ',') AS listaArtistas
+
+FOREACH (artistaNombre IN listaArtistas | 
+    MERGE (artista:Artista {nombre: trim(artistaNombre)})
+);
+
+
+
+
+
+
+
+LOAD CSV WITH HEADERS FROM 'file:///DB_FINAL4.csv' AS row
+MERGE (cancion:Cancion {track_name: row.track_name})
+ON CREATE SET 
+    cancion.days_on_chart = toInteger(row.days_on_chart),
+    cancion.streams = toInteger(row.streams),
+    cancion.duration_ms = toInteger(row.duration_ms),
+    cancion.date = row.date;
+
+
+LOAD CSV WITH HEADERS FROM 'file:///DB_FINAL4.csv' AS row
+WITH row, split(row.artist_names, ',') AS listaArtistas, row.track_name AS trackName
+UNWIND listaArtistas AS artistaNombre
+MATCH (cancion:Cancion {track_name: trackName})
+MATCH (artista:Artista {nombre: trim(artistaNombre)})
+MERGE (artista)-[:CANTA]->(cancion);
+
+
+LOAD CSV WITH HEADERS FROM 'file:///DB_FINAL4.csv' AS row
+
+MERGE (productora:Productora {nombre: row.source})
+
+WITH row, productora
+
+MATCH (artista:Artista)
+WHERE artista.nombre IN split(row.artist_names, ',')
+MERGE (artista)-[:TRABAJA_CON]->(productora);
+
+
+
+LOAD CSV WITH HEADERS FROM 'file:///DB_FINAL4.csv' AS row
+WITH row
+
+UNWIND split(row.artist_genre, ", ") AS generoNombre
+MERGE (g:Genero {nombre: generoNombre})
+
+WITH row, generoNombre
+MATCH (c:Cancion {track_name: row.track_name})
+MATCH (g:Genero {nombre: generoNombre})
+MERGE (c)-[:PERTENECE_A]->(g);
+
+
+
+LOAD CSV WITH HEADERS FROM 'file:///DB_FINAL4.csv' AS row
+MATCH (productora:Productora {nombre: row.source})
+MATCH (cancion:Cancion {track_name: row.track_name})
+MERGE (productora)-[:PRODUCE]->(cancion);
+
+
+
+LOAD CSV WITH HEADERS FROM 'file:///DB_FINAL4.csv' AS row
+MATCH (cancion:Cancion {track_name: row.track_name})
+MERGE (racha:Racha {dias: toFloat(row.daysonchart_float)})
+MERGE (racha)-[:TIENE]->(cancion);
+
+//-----------------------------------------------------------------
+
+LOAD CSV WITH HEADERS FROM 'file:///DB_FINAL4.csv' AS row
+MATCH (cancion:Cancion {track_name: row.track_name})
+MERGE (reproduccion:Reproducciones {streams: toFloat(row.streams_float)})
+MERGE (reproduccion)-[:GENERA]->(cancion);
+
+//-----------------------------------------------------------------
+
+LOAD CSV WITH HEADERS FROM 'file:///DB_FINAL4.csv' AS row
+MATCH (cancion:Cancion {track_name: row.track_name})
+MERGE (popularidad:Popularidad {peak_rank: toInteger(row.peak_rank)})
+MERGE (popularidad)-[:LLEGA]->(cancion);
+
+//-----------------------------------------------------------------
+
+LOAD CSV WITH HEADERS FROM 'file:///DB_FINAL4.csv' AS row
+MATCH (cancion:Cancion {track_name: row.track_name})
+MERGE (baile:Baile {danceability: toFloat(row.danceability)})
+MERGE (baile)-[:BAILAN]->(cancion);
+
+//-----------------------------------------------------------------
+//(este ultimo es para el nodo de fecha si se usa como nodo)
+
+LOAD CSV WITH HEADERS FROM 'file:///DB_FINAL4.csv' AS row
+MATCH (cancion:Cancion {track_name: row.track_name})
+MERGE (fecha:Fecha {date: row.date})
+MERGE (fecha)-[:APARECE]->(cancion);
