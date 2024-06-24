@@ -14,3 +14,16 @@ copia la ruta, abrelo en tu administrador de archivos (file manager) y pon una c
 Copia y pega todos los queries en el archivo [cargar3.txt](cargar3.txt)
 
 Con esto debería estar tu base de datos con los datos de la aplicación.
+
+## Graph of Data scheme with APOC plugin
+Instala el plugin APOC desde la interfaz de neo4j, usa el siguiente comando para generar un gráfo del data scheme.
+```txt
+CALL apoc.meta.graph()
+```
+
+
+
+## Data scheme
+
+![alt text](Data_scheme.jpg)
+

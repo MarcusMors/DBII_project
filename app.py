@@ -1,7 +1,7 @@
-import os
-
 from flask import Flask, jsonify, render_template, request
-from neo4j import GraphDatabase
+
+from Neo4jDriver import Neo4jDriver
+from Queries import Queries
 
 app = Flask(__name__)
 
@@ -9,24 +9,7 @@ app = Flask(__name__)
 
 # # Configurar la conexión a Neo4j
 
-# Clase de utilidad para manejar la sesión de Neo4j
-class Neo4jSession:
-    uri = os.getenv("NEO4J_URI")
-    username = os.getenv("NEO4J_USERNAME")
-    password = os.getenv("NEO4J_PASSWORD")
-    driver = 0
-    def __init__(self):
-        self._driver = GraphDatabase.driver(self.uri, auth=(self.user, self.password))
-
-    def close(self):
-        self._driver.close()
-
-    def run_query(self, query):
-        with self._driver.session() as session:
-            result = session.run(query)
-            return [record for record in result]
-
-Neo4jSession()
+neo4jDriver = Neo4jDriver()
 
 @app.route('/user/<user_name>')
 def show_user_profile(user_name):
@@ -116,11 +99,28 @@ def biblioteca():
     return render_template('biblioteca.html')
 
 
+@app.route('/query')
+def query():
+    try:
+        nodes = neo4jDriver.get_nodes(neo4jDriver)
+        nodes_data = []
+        for node in nodes:
+            node_data = {"id": node.id, "labels": list(node.labels), "properties": dict(node)}
+            nodes_data.append(node_data)
+        return jsonify(nodes_data)
+    
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 @app.errorhandler(404)
 def not_found_error(error):
     return render_template('errors/404.html'), 404
 
+@app.teardown_appcontext
+def close_driver(exception):
+    neo4jDriver.close()
 
 if __name__ == '__main__':
-    # neo4j_session = Neo4jSession(uri, user, password)
+    # neo4j_session = Neo4jDriver)
     app.run(debug=True)
