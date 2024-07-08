@@ -1,0 +1,7 @@
+{% for n in names %}
+<div class=".card">
+  <img class="small_img" src="{{url_for('static', filename='assets/corchea.jpg')}}" alt="Corchea">
+  <p><a href="songs/{{n.name}}">{{n.name}}</a></p>
+</div>
+{% endfor %}
+<!-- <span hx-get="/get/kpop" hx-trigger="revealed" hx-swap="outerHTML">Loading more ...</span> -->

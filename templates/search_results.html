@@ -1,0 +1,12 @@
+{% extends "app_layout.html" %}
+
+{% block title %} Music {% endblock %}
+
+{% block content %}
+
+<h2>Resultados de busqueda</h2>
+{% for i in names %}
+  <li>{{ i.name }}</li>
+{% endfor %}
+
+{% endblock %}

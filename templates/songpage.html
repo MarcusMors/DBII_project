@@ -3,11 +3,12 @@
 {% block title %} {{user.username}} {% endblock %}
 
 {% block content %}
-<h1>Welcome, {{ user.username }}!</h1>
+<h1>Esta es la página de la canción, {{ user.username }}!</h1>
 <ul>
   {% for item in items %}
   <li>{{ item }}</li>
   {% endfor %}
 </ul>
 
+<h2>Esta es la página de la canción, {{ user.username }}!</h2>
 {% endblock %}

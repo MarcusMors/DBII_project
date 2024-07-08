@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{%block title%}{%endblock%}</title>
+    <meta name="description" content="" />
+    <meta name="robots" content="index,follow" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <script src="https://unpkg.com/htmx.org@2.0.0"></script>
+
+    <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Roboto"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Poppins"
+    />
+    <link rel="icon" href="{{url_for('static', filename='assets/logo.png')}}" />
+    <link
+      rel="stylesheet"
+      href="{{url_for('static', filename='css/normalize.css')}}"
+    />
+
+    <link href="https://fonts.googleapis.com/css2" />
+    <script
+    src="https://kit.fontawesome.com/1b04830cf2.js"
+    crossorigin="anonymous"
+    ></script>
+    
+    {%block additional_css%}
+    {%endblock%}
+
+    <link
+      rel="stylesheet"
+      href="{{url_for('static', filename='css/layout.css')}}"
+    />
+    {%block css%}{%endblock%}
+  </head>
+
+  <body hx-boost="true" class="container">
+    <!-- HEADER -->
+
+    <div class="header">
+      <span
+        ><div href="/" class="logo_container">
+          <img
+            href="/"
+            class="logo"
+            src="{{url_for('static', filename='assets/logo.png')}}"
+            alt="Mucspsic Logo"
+          />
+          <span href="/" class="logo_text">Mucspsic</span>
+        </div></span
+      >
+      <span><a href="#">Favourites</a></span>
+      <span><a href="#">Community</a></span>
+
+      <div class="search_bar_container">
+        <form class="nav_bar_form" method="GET" hx-get="{{ url_for('search') }}" hx-target=".main" hx-swap="innerHTML">
+          <!-- <label for="search_type"></label> -->
+          <!-- Do it like IMDb search bar-->  
+          <select
+            id="search_type"
+            name="search_type"
+          >
+            <option value="All">All</option>
+            <option value="Users">Users</option>
+            <option value="Playlists">Playlists</option>
+            <option value="Songs">Songs</option>
+            <option value="Producer">Producers</option>
+          </select>
+          <input
+            type="text"
+            list="suggestions"
+            id="search_text"
+            name="search_text"
+            required
+            placeholder="Search"
+          />
+
+          <button type="submit" class="search_button" action="{{ url_for('search') }}">
+            <img
+              class="search_icon"
+              src="{{url_for('static', filename='assets/search_icon.svg')}}"
+              alt="search"
+            />
+          </button>
+
+          <datalist id="suggestions">
+            <!-- Default suggestions is none -->
+          </datalist>
+        </form>
+      </div>
+
+      <div class="header_icon_container" title="Friends"><img class="header_icon" src="{{url_for('static', filename='assets/friends_logo.png')}}" alt="Friends"></div>
+
+      <!-- Profile Dropdown -->
+      <!-- default_user_icon.svg -->
+      <div class="dropdown">
+        <span>Profile</span>
+        <div class="dropdown-content">
+          <ul>
+            <li><a href="#">Settings</a></li>
+            <li><a href="#">Friends</a></li>
+            <li><a href="#">Log Out</a></li>
+          </ul>
+        </div>
+      </div>
+      {%block header%}{%endblock%}
+    </div>
+    <!-- End_HEADER -->
+
+    <!-- SIDEBAR -->
+    <div class="menu">
+      {%block sidebar%}
+      {%endblock%}
+    </div>
+    <!-- End_SIDEBAR -->
+
+    <!-- CONTENIDO -->
+
+    <div class="main">
+      {%block content%}
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus tempus
+        nibh a condimentum gravida. Donec accumsan ipsum ac tincidunt
+        scelerisque. Integer maximus malesuada vulputate. Mauris cursus enim nec
+        vulputate rhoncus. Fusce eu dignissim enim. Phasellus dictum varius
+        justo a accumsan. Donec bibendum varius pretium. Suspendisse aliquam
+        vulputate lorem eu fermentum. Sed blandit porttitor ex ut laoreet. Nulla
+        laoreet velit sed dolor feugiat, ut condimentum felis tincidunt. Donec
+        pretium est eget neque ultricies, eu vehicula felis condimentum. Aenean
+        bibendum eu felis nec tincidunt. Aenean scelerisque dictum sollicitudin.
+        Sed lacinia ullamcorper velit, id volutpat nunc vestibulum sed.
+      </p>
+      {%endblock%}
+    </div>
+    <!-- End_CONTENIDO -->
+
+    <div class="sidebar">
+      <div>Recommendations</div>
+      <p>This is the sidebar.</p>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer" id="load_signal">
+      <span
+        ><div href="/" class="logo_container">
+          <img
+            href="/"
+            class="logo"
+            src="{{url_for('static', filename='assets/logo.png')}}"
+            alt="MovieMate Logo"
+          />
+          <span href="/" class="logo_text">Music</span>
+        </div></span
+      >
+
+      <ul>
+        <li>About us</li>
+        <li>Community</li>
+        <li>Work with us</li>
+        <li>Terms</li>
+        <li>Privacy</li>
+      </ul>
+      <ul>
+        <li>Facebook</li>
+        <li>Instagram</li>
+        <li>Twitter</li>
+        <li>LinkedIn</li>
+      </ul>
+    </div>
+    <!-- End_FOOTER -->
+  </body>
+
+  {%block scripts%} {%endblock%}
+</html>
+
+<!-- <script>
+  function openNav() {
+    document.getElementById("sidebar").style.width = "250px";
+    document.getElementById("main").style.marginLeft = "250px";
+  }
+
+  function closeNav() {
+    document.getElementById("sidebar").style.width = "0";
+    document.getElementById("main").style.marginLeft= "0";
+  }
+</script> -->

@@ -1,0 +1,164 @@
+MOSTRAR ARTISTA
+
+Mostrar canciones del artista
+
+MATCH (a:Artista {nombre: 'BTS'})-[:CANTA]->(c:Cancion)
+RETURN c.track_name;
+
+(aqui te lo entrega como lista)
+MATCH (artista:Artista {nombre: 'BTS'})
+MATCH (artista)-[:CANTA]->(cancion:Cancion)
+RETURN artista.nombre AS Artista, collect(cancion.track_name) AS Canciones
+
+mostrar todos los generos de todas las canciones de los artistas
+
+MATCH (a:Artista {nombre: 'BTS'})-[:CANTA]->(c:Cancion)-[:PERTENECE_A]->(g:Genero)
+RETURN collect(DISTINCT g.nombre) AS Generos
+
+Las productoras con las que trabajaron
+
+MATCH (a:Artista {nombre: 'BTS'})-[:CANTA]->(c:Cancion)<-[:PRODUCE]-(p:Productora)
+RETURN collect(DISTINCT p.nombre) AS Productoras
+
+Mostrar cuantas minutos de cancion tienen en total el artista
+
+MATCH (a:Artista {nombre: 'BTS'})-[:CANTA]->(c:Cancion)
+RETURN  toInteger(sum(c.duration_ms) / 60000) AS TotalDurationInMinutes
+
+
+Mostrar el promedio de cuanto son sus canciones de baile
+
+MATCH (a:Artista {nombre: 'BTS'})-[:CANTA]->(c:Cancion)<-[:BAILAN]-(b:Baile)
+RETURN  avg(b.danceability) AS PromedioBaile
+
+
+Mostrar cual es el numero de popularidad de su Cancion mas top
+
+MATCH (a:Artista {nombre: 'BTS'})-[:CANTA]->(c:Cancion)<-[:LLEGA]-(p:Popularidad)
+WITH a, min(p.peak_rank) AS PopularidadTop
+RETURN  PopularidadTop
+
+Mostrar cuantas reproducciones total tienen
+
+MATCH (a:Artista {nombre: 'BTS'})-[:CANTA]->(c:Cancion)
+RETURN  sum(c.streams) AS TotalReproducciones
+
+
+CANCIONES
+Mostrar los generos 
+MATCH (c:Cancion {track_name: 'KICK BACK'})-[:PERTENECE_A]->(g:Genero)
+RETURN c.track_name AS Cancion, collect(g.nombre) AS Generos
+
+Mostrar los atributos de la cancion
+MATCH (c:Cancion {track_name: 'KICK BACK'})
+RETURN c.track_name AS Cancion,
+       c.days_on_chart AS DaysOnChart,
+       c.streams AS Streams,
+       c.duration_ms AS DurationMillis,
+       c.date AS Date
+
+
+Mostrar el baile
+MATCH (c:Cancion {track_name: 'KICK BACK'})<-[:BAILAN]-(b:Baile)
+RETURN  b.danceability AS Danceability
+
+
+Mostrar la popularidad
+MATCH (c:Cancion {track_name: 'KICK BACK'})<-[:LLEGA]-(p:Popularidad)
+RETURN  p.peak_rank AS Popularidad
+
+Mostrar el artista
+MATCH (a:Artista)-[:CANTA]->(c:Cancion {track_name: 'KICK BACK'})
+RETURN a.nombre AS Artista
+
+Mostrar la productora
+MATCH (a:Productora)-[:PRODUCE]->(c:Cancion {track_name: 'KICK BACK'})
+RETURN a.nombre AS Productora
+
+Mostrar  playlistS que lo tienen agregado
+MATCH (p:Playlist)-[:OBTIENE]->(c:Cancion {track_name: 'FANCY'})
+RETURN p.nombre AS Playlist
+
+BUSQUEDA SMART?
+
+Busqueda por genero 
+(este primero es que tenga al menos uno de los generos en la lista)
+MATCH (c:Cancion)-[:PERTENECE_A]->(g:Genero)
+WHERE g.nombre IN ['anime','k-pop']  // Lista de nombres de géneros
+RETURN c.track_name AS Cancion, COLLECT(g.nombre) AS Generos
+
+(este mostrara canciones con todos los generos aplicados)
+MATCH (c:Cancion)
+WHERE ALL(genero IN ['anime rock', 'j-pop'] 
+          WHERE (c)-[:PERTENECE_A]->(:Genero {nombre: genero}))
+RETURN c.track_name AS Cancion
+
+
+Busqueda por artista (te da el nombre del artista y otros artistas que colaboraron en canciones suyas)(como un tambien te podria interesar)
+MATCH (artista:Artista {nombre: 'BTS'})-[:CANTA]->(cancion:Cancion)<-[:CANTA]-(otroArtista:Artista)
+WHERE otroArtista <> artista
+RETURN artista.nombre AS ArtistaInicial,collect(otroArtista.nombre) AS OtrosArtistas
+
+Busquesda por racha(se dividio el node de racha entre 100 y se dejo un decimal para mas relaciones*(ej:10.9, 8.5))
+MATCH (cancion:Cancion)<-[:TIENE]-(racha:Racha)
+WHERE racha.dias > 8     //toInteger(racha.dias) > 8 
+RETURN cancion.track_name AS Cancion;
+//, racha.dias AS Racha;
+
+Busqueda por reproducciones *(dividido entre 1000000 para formar mas relaciones)
+MATCH (cancion:Cancion)<-[:GENERA]-(reproducciones:Reproducciones)
+WHERE reproducciones.streams > 0.10  // Ejemplo de condición decimal
+RETURN cancion.track_name AS Cancion;
+//, reproducciones.streams AS Reproducciones;
+
+Busqueda por baile(solo  tiene un decimal)
+MATCH (cancion:Cancion)<-[:BAILAN]-(baile:Baile)
+WHERE baile.danceability > 0.5  // Condición para el baile (ejemplo)
+RETURN cancion.track_name AS Cancion;
+//, baile.danceability AS Baile;
+
+Busqueda por cancion(realiza la busqueda por una palabra clave y muestra toda cancion que contenga esa palabra)
+MATCH (cancion:Cancion)
+WHERE toLower(cancion.track_name)  =~ '.*\\bthe\\b.*'//se busca the
+RETURN cancion.track_name AS cancion
+
+Busqueda por popularidad 
+MATCH (popularidad:Popularidad)-[:LLEGA]->(cancion:Cancion)
+WHERE popularidad.peak_rank = 3
+RETURN cancion.track_name
+
+Busqueda por fecha
+MATCH (fecha:Fecha)-[:APARECE]->(cancion:Cancion)
+WHERE fecha.date = '2022-12-11'
+RETURN cancion.track_name
+
+(este lo realiza por año)
+MATCH (fecha:Fecha)-[:APARECE]->(cancion:Cancion)
+WHERE date(fecha.date).year = 2018
+RETURN cancion.track_name
+
+
+///////////////////////////////////////////////////////
+USUARIO
+Mostrar datos personales
+
+Mostrar amigos 
+MATCH (u:Usuario {nombre: 'Pedro'})-[:AMISTAD]->(amigo:Usuario)
+RETURN amigo.nombre
+
+Mostrar tus listas 
+MATCH (u:Usuario {nombre: 'Pedro'})-[:CREA]->(playlist:Playlist)
+RETURN playlist.nombre
+
+Mostrar las listas que sigues 
+
+
+PRODUCTORA
+
+Mostrar artistas que colaboraron 
+MATCH (p:Productora {nombre: 'WM Japan'})<-[:TRABAJA_CON]-(a:Artista)
+RETURN a.nombre AS Artista
+
+Mostrar canciones
+MATCH (p:Productora {nombre: 'WM Japan'})-[:PRODUCE]->(c:Cancion)
+RETURN c.track_name AS Cancion 

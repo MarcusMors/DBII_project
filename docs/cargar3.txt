@@ -96,3 +96,4 @@ LOAD CSV WITH HEADERS FROM 'file:///DB_FINAL4.csv' AS row
 MATCH (cancion:Cancion {track_name: row.track_name})
 MERGE (fecha:Fecha {date: row.date})
 MERGE (fecha)-[:APARECE]->(cancion);
+    

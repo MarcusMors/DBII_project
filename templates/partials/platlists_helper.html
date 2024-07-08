@@ -1,0 +1,6 @@
+{% for p in playlists %}
+  <div class="media_element">
+    <img src="{{url_for('static', filename='assets/corchea.jpg')}}" alt="Corchea">
+    <p>{{p.text}}</p>
+  </div>
+{% endfor %}

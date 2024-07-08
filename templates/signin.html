@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>sign up</title>
+  <title>Sign in</title>
   <script src="https://unpkg.com/htmx.org@2.0.0"
     integrity="sha384-wS5l5IKJBvK6sPTKa2WZ1js3d947pvWXbPJ1OmWfEuxLgeHcEbjUUA5i9V5ZkpCw"
     crossorigin="anonymous"></script>
@@ -13,7 +13,7 @@
   <!--  -->
 
   <form>
-    <h3>Sign Up</h3>
+    <h3>Sign in</h3>
     <p>
       <label for="email">Email</label>
       <input name="email" id="email" type="email" hx-post="/validate/email" hx-target="#emailError" placeholder="Email"
@@ -26,12 +26,11 @@
       <span id="usernameError"></span>
       
       <!-- <label for="password">password</label>
-      <input name="password" id="password" type="password" hx-post="/validate/password" hx-target="#usernameError"
-        placeholder="Username" hx-trigger="change, keyup delay:200ms changed">
-      <span id="usernameError"></span> -->
+      <input name="password" id="password" type="password" placeholder="Password">
+      <span id="passwordError"></span> -->
     </p>
 
-    <button hx-post="/signup">Submit</button>
+    <button hx-post="/signin">Sign in</button>
   </form>
 </body>
 

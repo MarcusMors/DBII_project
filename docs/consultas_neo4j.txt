@@ -1,0 +1,63 @@
+conteo de artistas por total de canciones y ordenamiento 
+
+MATCH (a:Artista)-[:CANTA]->(c:Cancion)
+RETURN a.nombre AS Artista, count(c) AS TotalCanciones
+ORDER BY TotalCanciones DESC
+
+
+tortal de reproducciones por artista(puede ser limitado por uno)(como el artista con mas reproducciones en la principal)
+MATCH (a:Artista)-[:CANTA]->(c:Cancion)
+WITH a, sum(c.streams) AS TotalStreams
+RETURN a.nombre AS Artista, TotalStreams
+ORDER BY TotalStreams DESC
+LIMIT 1
+
+por varios generos*(solo se agrega mas como se ve abajo)
+
+MATCH (c:Cancion)-[:TIENE_GENERO]->(g1:Genero {nombre: 'Rock'}),
+      (c)-[:TIENE_GENERO]->(g2:Genero {nombre: 'Pop'}),
+      (c)-[:TIENE_GENERO]->(g3:Genero {nombre: 'Electronic'})
+RETURN c.track_name AS track_name
+
+
+por relaciones especificaciones(en este caso artistas que han trabajdo en la misma cancion)
+
+MATCH p=(:Artista)-[:CANTA]->(:Cancion)<-[:CANTA]-(:Artista)
+RETURN p
+
+artistas que hacolaborado en una cancion(con un mejor return que el de arriba   )
+
+MATCH (a1:Artista)-[:CANTA]->(c:Cancion)<-[:CANTA]-(a2:Artista)
+WHERE a1 <> a2
+RETURN a1, c, a2
+
+conteo de artistas por total de canciones y ordenamiento 
+
+MATCH (a:Artista)-[:CANTA]->(c:Cancion)
+RETURN a.nombre AS Artista, count(c) AS TotalCanciones
+ORDER BY TotalCanciones DESC
+
+rango de fechas entre el artista y cancion 
+
+MATCH (a:Artista)-[:CANTA]->(c:Cancion)
+WHERE c.date >= '2022-01-01' AND c.date <= '2022-12-31'
+RETURN a, c
+
+obtener cancion mas reproducida con su artista
+
+MATCH (a:Artista)-[:CANTA]->(c:Cancion)
+WITH a, c
+ORDER BY c.streams DESC
+RETURN a.nombre AS Artista, collect(c)[0] AS CancionMasPopular
+
+rango de enteros 
+
+MATCH (c:Cancion)
+WHERE c.streams > 1000000 AND c.streams < 5000000
+RETURN c
+
+
+media de un genero especifico 
+
+MATCH (c:Cancion)-[:PERTENECE_A]->(g:Genero {nombre: 'anime'})
+RETURN g.nombre AS Genero, avg(c.streams) AS MediaStreams

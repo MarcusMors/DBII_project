@@ -1,111 +1,112 @@
 /* Estilos generales */
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    line-height: 1.6;
-    background-color: #ffffff; /* Fondo blanco */
-    color: #000000; /* Texto negro */
-    margin: 0;
-    padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.6;
+  background-color: #ffffff; /* Fondo blanco */
+  color: #000000; /* Texto negro */
+  margin: 0;
+  padding: 0;
 }
 
 .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 header {
-    background-color: #000000; /* Fondo negro */
-    color: #ffffff; /* Texto blanco */
-    padding: 1rem 0;
-    text-align: center;
-    position: relative; /* Añadido para posicionamiento relativo */
+  background-color: #0c1027; /* Fondo negro */
+  color: #ffffff; /* Texto blanco */
+  padding: 1rem 0;
+  text-align: center;
+  position: relative; /* Añadido para posicionamiento relativo */
 }
 
 header h1 {
-    font-size: 2rem;
-    font-weight: bold;
-    letter-spacing: 1px;
+  font-size: 2rem;
+  font-weight: bold;
+  letter-spacing: 1px;
 }
 
 nav {
-    position: relative; /* Añadido para posicionamiento relativo */
+  position: relative; /* Añadido para posicionamiento relativo */
 }
 
 nav ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    display: flex; /* Cambiado a flex para alinear elementos */
-    justify-content: space-between; /* Alinear con espacio entre los elementos */
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex; /* Cambiado a flex para alinear elementos */
+  justify-content: space-between; /* Alinear con espacio entre los elementos */
 }
 
 nav ul.account {
-    position: absolute;
-    top: 0;
-    right: 40px; /* Ajustar según necesidades */
+  position: absolute;
+  top: 0;
+  right: 40px; /* Ajustar según necesidades */
 }
 
 nav ul li {
-    margin-right: 20px;
+  margin-right: 20px;
 }
 
 nav ul li a {
-    text-decoration: none;
-    color: #808080; /* Texto gris para los enlaces */
-    font-size: 1rem;
-    font-weight: bold;
-    transition: color 0.3s ease;
+  text-decoration: none;
+  color: #808080; /* Texto gris para los enlaces */
+  font-size: 1rem;
+  font-weight: bold;
+  transition: color 0.3s ease;
 }
 
 nav ul li a:hover {
-    color: #ff2d55; /* Color rojo para el estado de hover */
+  color: #ff2d55; /* Color rojo para el estado de hover */
 }
 
 nav ul li a.active {
-    color: #ff2d55; /* Color rojo para el enlace activo */
+  color: #ff2d55; /* Color rojo para el enlace activo */
 }
 
 main {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 section {
-    margin-bottom: 30px;
+  margin-bottom: 30px;
 }
 
 h2 {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #000000; /* Texto negro para los encabezados */
-    margin-bottom: 10px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #000000; /* Texto negro para los encabezados */
+  margin-bottom: 10px;
 }
 
 ul {
-    list-style-type: none;
-    padding: 0;
+  list-style-type: none;
+  padding: 0;
 }
 
 ul li {
-    padding: 10px;
-    margin-bottom: 10px;
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 ul li:hover {
-    background-color: #f0f0f0;
+  background-color: #f0f0f0;
 }
 
 footer {
-    text-align: center;
-    padding: 10px;
-    background-color: #000000;
-    color: #ffffff;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
+  text-align: center;
+  padding: 10px;
+  background-color: #000000;
+  color: #ffffff;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }
