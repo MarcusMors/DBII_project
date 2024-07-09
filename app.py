@@ -48,12 +48,13 @@ def show_user_profile():
 @app.route('/signin', methods=["POST", "GET"])
 def sign_in():
     global logged_user
+        
     if request.method == "POST":
         username = request.form['username']
         password = request.form['password']
-
+        perfil = neo4jDriver.check_use_password(neo4jDriver,username)
         # Verificar las credenciales (aquí deberías tener tu lógica de autenticación)
-        if username in usernames and password == '1234':
+        if perfil == password:
             session['username'] = username
             logged_user = True
             return redirect(url_for('index_root'))
@@ -160,17 +161,7 @@ def search():
     if search_type == "All":
         pass
     if search_type == "Users":
-        if search_query == "__conocidos":
-            username = session.get("username")
-            records = neo4jDriver.get_usuario(neo4jDriver,username)
-            nodes_data = []
-            for r in records:
-                node_data = {"name": r["results"]}
-                nodes_data.append(node_data)
-            return render_template("partials/user_section.html",media_infos=nodes_data)
-        else:
-            records = neo4jDriver.search_artists(neo4jDriver,search_query)
-
+        records = neo4jDriver.search_artists(neo4jDriver,search_query)
     if search_type == "Playlists":
         records = neo4jDriver.search_playlists(neo4jDriver,search_query)
     if search_type == "Songs":

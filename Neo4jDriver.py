@@ -259,13 +259,13 @@ class Neo4jDriver:
         return self.query(cypher, {"name": name, "correo": correo, "contra": contra})
     
     @staticmethod
-    def check_use_password(self,correo,):
+    def check_use_password(self,usuario,):
         cypher = """
-        MATCH (u:Usuario {correo: $correo})
+        MATCH (u:Usuario {nombre: $usuario})
         RETURN u.contraseña AS contra
 
         """
-        result= self.query(cypher, {"correo": correo})
+        result= self.query(cypher, {"usuario": usuario})
         contra = result[0]["contra"]
         return contra
     
@@ -435,6 +435,32 @@ class Neo4jDriver:
         record = result[0]
         datos = [record["a"], record["b"], record["c"]]
         return datos
+    
+    @staticmethod
+    def buscar_usuario(self, usuario):
+        cypher = """
+        MATCH (u:Usuario {nombre: $usuario})
+        RETURN u.nombre AS nombre
+
+
+        """
+
+        result= self.query(cypher, {"usuario": usuario})
+        user = result[0]["nombre"]
+
+        return user
+
+    @staticmethod
+    def buscar_artista(self, artista):
+        cypher = """
+        MATCH (u:Artista {nombre: $artista})
+        RETURN u.nombre AS nombre
+        """
+
+        result= self.query(cypher, {"artista": artista})
+        artist = result[0]["nombre"]
+
+        return artist
     
 driver=Neo4jDriver()
 
