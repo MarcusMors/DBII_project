@@ -31,27 +31,30 @@ def index_root():
 def show_user_profile():
     # Obtener el nombre de usuario desde la sesión
     username = session.get('username')
-
+    perfil = neo4jDriver.mostrar_user(neo4jDriver,username)
     # Simular datos de usuario
     user_data = {
-        'username': username,
-        'nombre': 'Nombre del Usuario',
-        'correo': 'correo@example.com',
-        'ubicacion': 'Ubicación del Usuario'
-    }
+        'username': perfil[0],
+        'nombre': perfil[1],
+        'email': perfil[2],
+    }    
+    print(user_data)
 
     return render_template('user_profile.html', user=user_data)
+
+
 
 
 @app.route('/signin', methods=["POST", "GET"])
 def sign_in():
     global logged_user
+        
     if request.method == "POST":
         username = request.form['username']
         password = request.form['password']
-
+        perfil = neo4jDriver.check_use_password(neo4jDriver,username)
         # Verificar las credenciales (aquí deberías tener tu lógica de autenticación)
-        if username in usernames and password == '1234':
+        if perfil == password:
             session['username'] = username
             logged_user = True
             return redirect(url_for('index_root'))
@@ -71,11 +74,12 @@ def sign_out():
 
 @app.route('/signup', methods=["POST", "GET"])
 def signup():
+    
     if request.method == "POST":
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
-
+        
         # Verificar si el nombre de usuario o el correo electrónico ya están registrados
         if username in usernames:
             message = f"El nombre de usuario '{username}' ya está en uso. Por favor, elige otro."
@@ -89,8 +93,9 @@ def signup():
             emails.append(email)
             session['username'] = username  # Establecer la sesión después del registro
             logged_user = True
-            return redirect(url_for('index_root'))  # Redirigir a la página principal después del registro
-
+            neo4jDriver.create_user(neo4jDriver,username, email, password)
+            return redirect(url_for('index_root'))  # Redirigir a la página principal después del registro            
+       
     return render_template('signup.html')
 
 
@@ -247,9 +252,21 @@ def load_friends_recent_likes():
     return render_template("partials/media_section.html", media_infos=featured_songs, prefix=Songs)
 
 
-@app.route('/myplaylists')
+# Ruta para cargar la página playlists.html
+@app.route('/playlists')
 def load_playlists():
-    return render_template("partials/playlists.html", playlists=featured_songs)
+    # Aquí podrías agregar lógica para obtener datos de playlists si es necesario
+    playlists_data = [
+        {'name': 'Playlist 1', 'songs': ['Song A', 'Song B', 'Song C']},
+        {'name': 'Playlist 2', 'songs': ['Song X', 'Song Y', 'Song Z']}
+        # Agrega más datos según sea necesario
+    ]
+    return render_template('playlists.html', playlists=playlists_data)
+
+# Otras rutas y lógica de tu aplicación
+
+if __name__ == '__main__':
+    app.run(debug=True)
 
 
 @app.route('/home')

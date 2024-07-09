@@ -259,13 +259,13 @@ class Neo4jDriver:
         return self.query(cypher, {"name": name, "correo": correo, "contra": contra})
     
     @staticmethod
-    def check_use_password(self,correo,):
+    def check_use_password(self,usuario,):
         cypher = """
-        MATCH (u:Usuario {correo: $correo})
+        MATCH (u:Usuario {nombre: $usuario})
         RETURN u.contraseña AS contra
 
         """
-        result= self.query(cypher, {"correo": correo})
+        result= self.query(cypher, {"usuario": usuario})
         contra = result[0]["contra"]
         return contra
     
@@ -422,7 +422,20 @@ class Neo4jDriver:
 
         """
         return self.query(cypher, {"lista": lista,"cancion":cancion})
+    
+    @staticmethod
+    def mostrar_user(self, usuario):
+        cypher = """
+        MATCH (u:Usuario {nombre: $usuario})
+        RETURN u.nombre AS a, u.contraseña AS b, u.correo AS c
 
+        """
+
+        result= self.query(cypher, {"usuario": usuario})
+        record = result[0]
+        datos = [record["a"], record["b"], record["c"]]
+        return datos
+    
     @staticmethod
     def buscar_usuario(self, search_string):
         # cypher = (
@@ -447,6 +460,18 @@ class Neo4jDriver:
         result= self.query(final_query)
         return result
 
+    @staticmethod
+    def buscar_artista(self, artista):
+        cypher = """
+        MATCH (u:Artista {nombre: $artista})
+        RETURN u.nombre AS nombre
+        """
+
+        result= self.query(cypher, {"artista": artista})
+        artist = result[0]["nombre"]
+
+        return artist
+    
 driver=Neo4jDriver()
 
 #print(driver.get_nodes(driver))
@@ -467,4 +492,4 @@ driver=Neo4jDriver()
 #driver.create_lista(driver,"sol","Musica9")
 #driver.delete_lista(driver,"Musica9")
 #driver.agregar_cancion_a_lista(driver,"Musica9","Ditto")
-#driver.eliminar_cancion_a_lista(driver,"Musica9","Ditto")
+#driver.eliminar_cancion_a_lista(driver,"Musica9","Dito")
