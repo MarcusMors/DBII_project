@@ -1,10 +1,10 @@
-from flask import Flask, jsonify, render_template, request, url_for
+from flask import Flask, jsonify, render_template, request, url_for,flash,redirect,session
 
 from Neo4jDriver import Neo4jDriver
 from Queries import Queries
 
 app = Flask(__name__)
-
+app.config['SECRET_KEY'] = 'your_secret_key'##
 # Neo4j connection settings
 
 # # Configurar la conexión a Neo4j
@@ -65,6 +65,26 @@ def validate_username():
         return "This username has been already taken."
     else:
         return ""
+
+users = {    "test@example.com": "password123"}##
+@app.route('/login', methods=['GET', 'POST'])##
+def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        
+        if email in users and users[email] == password:
+            flash('ingreso exitoso', 'success')
+            session['user'] = email
+            return redirect(url_for('index_root'))
+        else:
+            flash('email o pasword incorrecto. Vuelva a revisar', 'danger')
+            return redirect(url_for('login'))
+    
+    return render_template('login.html')
+
+
+
 
 @app.route('/songs/<song_name>')
 def show_song_name(song_name):
