@@ -422,6 +422,20 @@ class Neo4jDriver:
 
         """
         return self.query(cypher, {"lista": lista,"cancion":cancion})
+    
+    @staticmethod
+    def mostrar_user(self, usuario):
+        cypher = """
+        MATCH (u:Usuario {nombre: $usuario})
+        RETURN u.nombre AS a, u.contraseña AS b, u.correo AS c
+
+        """
+
+        result= self.query(cypher, {"usuario": usuario})
+        record = result[0]
+        datos = [record["a"], record["b"], record["c"]]
+        return datos
+    
 driver=Neo4jDriver()
 
 #print(driver.get_nodes(driver))

@@ -31,16 +31,18 @@ def index_root():
 def show_user_profile():
     # Obtener el nombre de usuario desde la sesión
     username = session.get('username')
-
+    perfil = neo4jDriver.mostrar_user(neo4jDriver,username)
     # Simular datos de usuario
     user_data = {
-        'username': username,
-        'nombre': 'Nombre del Usuario',
-        'correo': 'correo@example.com',
-        'ubicacion': 'Ubicación del Usuario'
-    }
+        'username': perfil[0],
+        'nombre': perfil[1],
+        'email': perfil[2],
+    }    
+    print(user_data)
 
     return render_template('user_profile.html', user=user_data)
+
+
 
 
 @app.route('/signin', methods=["POST", "GET"])
@@ -71,11 +73,12 @@ def sign_out():
 
 @app.route('/signup', methods=["POST", "GET"])
 def signup():
+    
     if request.method == "POST":
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
-
+        
         # Verificar si el nombre de usuario o el correo electrónico ya están registrados
         if username in usernames:
             message = f"El nombre de usuario '{username}' ya está en uso. Por favor, elige otro."
@@ -89,8 +92,9 @@ def signup():
             emails.append(email)
             session['username'] = username  # Establecer la sesión después del registro
             logged_user = True
-            return redirect(url_for('index_root'))  # Redirigir a la página principal después del registro
-
+            neo4jDriver.create_user(neo4jDriver,username, email, password)
+            return redirect(url_for('index_root'))  # Redirigir a la página principal después del registro            
+       
     return render_template('signup.html')
 
 
