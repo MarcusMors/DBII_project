@@ -44,9 +44,13 @@ class Neo4jDriver:
     @staticmethod
     def get_canciones_de_genero_anime(self, limit=5):
         cypher = (
-            "MATCH (c:Cancion)-[:PERTENECE_A]->(g1:Genero {nombre: 'anime'})"
-            "RETURN c.track_name AS names LIMIT $limit"
+            "MATCH (c:Cancion)-[:PERTENECE_A]->(g1:Genero {nombre: 'anime'});"
+            "RETURN c.track_name AS names LIMIT 5;"
             )
+        # cypher = (
+        #     "MATCH (c:Cancion)-[:PERTENECE_A]->(g1:Genero {nombre: 'anime'})"
+        #     "RETURN c.track_name AS names LIMIT $limit"
+        #     )
         return self.query(cypher, {"limit": limit})
 
     @staticmethod
@@ -60,11 +64,21 @@ class Neo4jDriver:
 
     @staticmethod
     def search_songs(self, search_string , limit=5):
+        # cypher = (
+        # "MATCH (cancion:Cancion) "
+        # "WHERE toLower(cancion.track_name)  =~ '.*\\\\bthe\\\\b.*'"
+        # "RETURN cancion.track_name AS results LIMIT 5"
+        # )
         cypher = (
-        "MATCH (cancion:Cancion)"
-        "WHERE toLower(cancion.track_name)  =~ '.*\\b$search_string\\b.*'"
-        "RETURN cancion.track_name AS results LIMIT $limit"
+        "MATCH (cancion:Cancion) "
+        "WHERE toLower(cancion.track_name)  =~ '.*\\\\ba\\\\b.*' "
+        "RETURN cancion.track_name AS results LIMIT $limit "
         )
+        # cypher = (
+        # "MATCH (cancion:Cancion) "
+        # "WHERE toLower(cancion.track_name)  =~ '.*\\\\b$search_string\\\\b.*' "
+        # "RETURN cancion.track_name AS results LIMIT $limit "
+        # )
         print("cypher = ")
         print(cypher)
         return self.query(cypher, {"search_string": search_string, "limit": limit})

@@ -1,11 +1,17 @@
-*:Zone.Identifier
 .env
 myenv
 path
 fonts
 
-**helper.py
-**aux.py
+#Fuck windows
+*:Zone.Identifier
+
+# dummy mocking files
+**/*helper.*
+**/*aux.*
+
+# IDE, text editor configurations
+.vscode
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
