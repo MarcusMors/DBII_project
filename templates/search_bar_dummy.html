@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTMX Example</title>
+    <script src="https://unpkg.com/htmx.org@2.0.0"></script>
+    
+</head>
+<body>
+    <form
+    hx-boost="true"
+    hx-get="{{ url_for('search') }}"
+    hx-trigger="keyup from:input[type='search'] changed delay:200ms"
+    hx-target="#search_table"
+    hx-indicator="#spinner"
+    hx-swap="innerHTML"
+    >
+        <select
+        id="search_type"
+        name="search_type"
+        >
+          <option value="All">All</option>
+          <option value="Users">Users</option>
+          <option value="Playlists">Playlists</option>
+          <option value="Songs">Songs</option>
+          <option value="Producer">Producers</option>
+        </select>
+
+        <!-- <input type="checkbox" name="search_type" id="search_type" value="1"> -->
+        <input 
+          type="text"
+          name="search_query"
+          id="search_query"
+          value="search_query"
+        >
+        <button type="submit">Submit</button>
+
+        <img id="spinner" class="htmx-indicator" src="/static/img/spinning-circles.svg" alt="Request in Flight...">
+
+        <table>
+          <tbody id="search_table">
+            <tr><td>rows will be added here</td></tr>
+          </tbody>
+        </table>
+    </form>
+    <script>
+      function updateHxVals() {
+          var searchType = document.getElementById('search_type');
+          var search_query = document.getElementById('search_query');
+          search_query.setAttribute('hx-vals', JSON.stringify({ search_type: searchType.value }));
+      }
+
+      // Initialize hx-vals on page load
+      document.addEventListener('DOMContentLoaded', updateHxVals);
+    </script>
+</body>
+</html>

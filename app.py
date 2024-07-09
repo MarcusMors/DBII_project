@@ -81,34 +81,44 @@ def show_song(song_name):
 #### IDK WHAT TO DO WITH THIS
 
 
+# @app.route('/search')
 @app.route('/search', methods=["GET"])
 def search():
     search_type = request.args.get('search_type')
-    search_text = request.args.get('search_text')
+    search_query = request.args.get('search_query')
+    trigger= request.headers.get("HX-Trigger")
 
-    print(f"{ search_text = }")
     print(f"{ search_type = }")
+    print(f"{ search_query = }")
+    print(f"{ trigger = }")
     records = []
 
     if search_type == "All":
         pass
     if search_type == "Users":
-        records = neo4jDriver.search_artists(neo4jDriver,search_text)
+        records = neo4jDriver.search_artists(neo4jDriver,search_query)
     if search_type == "Playlists":
-        records = neo4jDriver.search_playlists(neo4jDriver,search_text)
+        records = neo4jDriver.search_playlists(neo4jDriver,search_query)
     if search_type == "Songs":
-        records = neo4jDriver.search_songs(neo4jDriver,search_text)
+        records = neo4jDriver.search_songs(neo4jDriver,search_query)
     if search_type == "Producer":
-        records = neo4jDriver.search_producer(neo4jDriver,search_text)
-
-    if not records:
-        return render_template("partials/no_matches_found.html")
+        records = neo4jDriver.search_producer(neo4jDriver,search_query)
 
     nodes_data = []
     for r in records:
         print(f"{r = }")
         node_data = {"name": r["results"]}
         nodes_data.append(node_data)
+
+    if records is None:
+        print("NO MATCHES")
+        return render_template("partials/no_matches_found.html")
+
+
+    if request.headers.get("HX-Trigger") == "search":
+        print("HX-TRIGGER")
+        print(f"{ nodes_data = }")
+        return render_template("partials/search_rows.html", media_infos=nodes_data)
 
     return render_template("partials/media_section.html",media_infos=nodes_data)
     # return jsonify("hello this is my answer motherfucker")
@@ -121,12 +131,12 @@ def search():
 # @app.route('/search',methods=["POST"])
 @app.route('/song/search',methods=["POST"])
 def song_search():
-    search_text = request.form.get('search_text')
+    search_query = request.form.get('search_query')
     print("-----------------------------------")
-    print(search_text)
+    print(search_query)
     print("-----------------------------------")
     # search_type = request.form.get('search_type')
-    records = neo4jDriver.search_artists(neo4jDriver,search_text)
+    records = neo4jDriver.search_artists(neo4jDriver,search_query)
     nodes_data = []
     for r in records:
         node_data = {"name": r["names"]}
@@ -244,6 +254,14 @@ def close_driver(exception):
 @app.route('/layout')
 def app_layout():
     return render_template('app_layout.html')
+
+@app.route('/search_bar_tester')
+def search_bar_tester():
+    return render_template('search_bar_tester.html')
+
+@app.route('/search_bar_dummy')
+def search_bar_dummy():
+    return render_template('search_bar_dummy.html')
 
 
 if __name__ == '__main__':

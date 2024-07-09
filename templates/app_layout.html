@@ -43,6 +43,7 @@
     <!-- HEADER -->
 
     <div class="header">
+      {%block header%}
       <span
         ><div href="/" class="logo_container">
           <img
@@ -74,8 +75,8 @@
           <input
             type="text"
             list="suggestions"
-            id="search_text"
-            name="search_text"
+            id="search_query"
+            name="search_query"
             required
             placeholder="Search"
           />
@@ -108,7 +109,7 @@
           </ul>
         </div>
       </div>
-      {%block header%}{%endblock%}
+      {%endblock%}
     </div>
     <!-- End_HEADER -->
 
