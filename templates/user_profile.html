@@ -1,13 +1,29 @@
 {% extends "base.html" %}
 
-{% block title %} {{user.username}} {% endblock %}
+{% block title %} Perfil de {{ user.username }} {% endblock %}
 
 {% block content %}
-<h1>Welcome, {{ user.username }}!</h1>
-<ul>
-  {% for item in items %}
-  <li>{{ item }}</li>
-  {% endfor %}
-</ul>
-
+<div class="user-profile">
+    <header class="profile-header">
+        <img src="{{ url_for('static', filename='assets/profile.png') }}" alt="Imagen de perfil" class="profile-image" style="width: 150px; height: auto;">
+        <h1 class="profile-username">{{ user.username }}</h1>
+    </header>
+    <section class="profile-details">
+        <h2>Detalles del Perfil</h2>
+        <ul>
+            <li><strong>Nombre:</strong> {{ user.nombre }}</li>
+            <li><strong>Correo electrónico:</strong> {{ user.correo }}</li>
+            <li><strong>Ubicación:</strong> {{ user.ubicacion }}</li>
+            <!-- Agrega más detalles según sea necesario -->
+        </ul>
+    </section>
+    <section class="profile-actions">
+        <h2>Acciones</h2>
+        <ul>
+            <li><a href="#">Editar Perfil</a></li>
+            <li><a href="#">Cambiar Contraseña</a></li>
+            <li><a href="{{ url_for('sign_out') }}">Cerrar Sesión</a></li>
+        </ul>
+    </section>
+</div>
 {% endblock %}

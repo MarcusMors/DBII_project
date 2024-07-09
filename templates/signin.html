@@ -1,37 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <title>Sign in</title>
-  <script src="https://unpkg.com/htmx.org@2.0.0"
-    integrity="sha384-wS5l5IKJBvK6sPTKa2WZ1js3d947pvWXbPJ1OmWfEuxLgeHcEbjUUA5i9V5ZkpCw"
-    crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .signin-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 300px;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 14px;
+        }
+        .form-group button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .form-group button:hover {
+            background-color: #0056b3;
+        }
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+        .signup-link {
+            margin-top: 10px;
+        }
+    </style>
 </head>
-
-<body hx-boost="true">
-  <!--  -->
-
-  <form>
-    <h3>Sign in</h3>
-    <p>
-      <label for="email">Email</label>
-      <input name="email" id="email" type="email" hx-post="/validate/email" hx-target="#emailError" placeholder="Email"
-        hx-trigger="change, keyup delay:200ms changed">
-      <span id="emailError"></span>
-
-      <label for="username">Username</label>
-      <input name="username" id="username" type="text" hx-post="/validate/username" hx-target="#usernameError"
-        placeholder="Username" hx-trigger="change, keyup delay:200ms changed">
-      <span id="usernameError"></span>
-      
-      <!-- <label for="password">password</label>
-      <input name="password" id="password" type="password" placeholder="Password">
-      <span id="passwordError"></span> -->
-    </p>
-
-    <button hx-post="/signin">Sign in</button>
-  </form>
+<body>
+    <div class="signin-container">
+        <h2>Sign In</h2>
+        {% if message %}
+            <p class="error-message">{{ message }}</p>
+        {% endif %}
+        <form action="/signin" method="POST">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <button type="submit">Sign In</button>
+            </div>
+        </form>
+        <div class="signup-link">
+            <p>Don't have an account? <a href="{{ url_for('signup') }}">Sign Up</a></p>
+        </div>
+    </div>
 </body>
-
 </html>

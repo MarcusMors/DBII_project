@@ -99,15 +99,16 @@
       <!-- Profile Dropdown -->
       <!-- default_user_icon.svg -->
       <div class="dropdown">
-        <span>Profile</span>
+        <a href="{{ url_for('show_user_profile', user_name='your_username_here') }}">Profile</a>
         <div class="dropdown-content">
-          <ul>
-            <li><a href="#">Settings</a></li>
-            <li><a href="#">Friends</a></li>
-            <li><a href="#">Log Out</a></li>
-          </ul>
+            <ul>
+                <li><a href="#">Settings</a></li>
+                <li><a href="#">Friends</a></li>
+                <li><a href="{{ url_for('sign_out') }}">Logout</a></li>
+            </ul>
         </div>
-      </div>
+    </div>
+    
       {%block header%}{%endblock%}
     </div>
     <!-- End_HEADER -->

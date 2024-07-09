@@ -3,25 +3,74 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>{% block title %}Default Title{% endblock %}</title>
+  <title>{% block title %}Spotify-like Page{% endblock %}</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2">
+  <link rel="stylesheet" href="path/to/your/layout.css"> <!-- Asegúrate de reemplazar 'path/to/your/layout.css' con la ruta correcta a tu archivo layout.css -->
   <script src="https://unpkg.com/htmx.org@2.0.0"
     integrity="sha384-wS5l5IKJBvK6sPTKa2WZ1js3d947pvWXbPJ1OmWfEuxLgeHcEbjUUA5i9V5ZkpCw"
     crossorigin="anonymous"></script>
-  <link href="https://fonts.googleapis.com/css2" />
-  <script
-  src="https://kit.fontawesome.com/1b04830cf2.js"
-  crossorigin="anonymous"
-  ></script>
+  <script src="https://kit.fontawesome.com/1b04830cf2.js" crossorigin="anonymous"></script>
 </head>
 
-<body hx-boost="true">
-  {% include 'partials/header.html' %}
+<body hx-boost="true" class="container">
 
-  <div>
-    {% block content %}{% endblock %}
-  </div>
+  <header class="header">
+    <div class="logo_container">
+      <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Profile Picture" class="profile-image">
+      <span class="logo_text">Mucspsic</span>
+    </div>
+    <nav>
+      <ul class="nav_links">
+          <li><a href="{{ url_for('index_root') }}">Home</a></li>
+          <li><a href="#">Search</a></li>
+          <li><a href="#">Library</a></li>
+      </ul>
+    </nav>  
+    <div class="profile_dropdown dropdown">
+      <img src="{{ url_for('static', filename='assets/profile.png') }}" alt="Profile Picture" class="profile-image">
+      <div class="dropdown-content">
+        <a href="#">Profile</a>
+        <a href="#">Settings</a>
+        <li><a href="{{ url_for('sign_out') }}">Logout</a></li>
+      </div>
+    </div>
+  </header>
 
-  {% include 'partials/footer.html' %}
+  <main class="main">
+    {% block content %}
+    <div class="horizontal_scroll">
+      <div class="media_element" hx-get="/song/1" hx-trigger="click" hx-swap="outerHTML" hx-target="this">
+        <img src="https://via.placeholder.com/150" alt="Song 1">
+        <p>Song 1</p>
+      </div>
+      <div class="media_element" hx-get="/song/2" hx-trigger="click" hx-swap="outerHTML" hx-target="this">
+        <img src="https://via.placeholder.com/150" alt="Song 2">
+        <p>Song 2</p>
+      </div>
+      <!-- Agrega más elementos de medios según sea necesario -->
+    </div>
+    {% endblock %}
+  </main>
+
+  <footer class="footer">
+    <div class="player_controls">
+      <button><i class="fas fa-backward"></i></button>
+      <button><i class="fas fa-play"></i></button>
+      <button><i class="fas fa-forward"></i></button>
+    </div>
+    <div class="volume_controls">
+      <button><i class="fas fa-volume-up"></i></button>
+      <input type="range" min="0" max="100" value="50" class="volume_slider">
+    </div>
+  </footer>
+
+  <script>
+    // Función para manejar el clic en una canción
+    function songClicked(songName) {
+      alert("Song clicked: " + songName); // Aquí puedes cambiar la acción, como redireccionar o mostrar detalles
+    }
+  </script>
+
 </body>
 
 </html>
