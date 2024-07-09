@@ -241,15 +241,15 @@ def song_search():
     return render_template("search_results.html", names=nodes_data)
 
 
+    featured_songs = ["song_1", "song_2", "song_3"]
 @app.route('/featured')
 def load_featured():
-    featured_songs = ["song_1", "song_2", "song_3"]
     return jsonify(items=featured_songs)
 
 
 @app.route('/friends/recent_likes')
 def load_friends_recent_likes():
-    return render_template("partials/media_section.html", media_infos=featured_songs, prefix=Songs)
+    return render_template("partials/media_section.html", media_infos=featured_songs, prefix="song")
 
 
 # Ruta para cargar la página playlists.html
@@ -265,8 +265,6 @@ def load_playlists():
 
 # Otras rutas y lógica de tu aplicación
 
-if __name__ == '__main__':
-    app.run(debug=True)
 
 
 @app.route('/home')
@@ -288,7 +286,7 @@ def get_kpop():
         node_data = {"name": r["names"]}
         nodes_data.append(node_data)
 
-    return render_template("partials/media_section.html", media_infos=nodes_data, prefix=Songs)
+    return render_template("partials/media_section.html", media_infos=nodes_data, prefix="song")
 
 
 @app.route('/get/anime')
@@ -300,7 +298,7 @@ def get_anime():
         node_data = {"name": r["names"]}
         nodes_data.append(node_data)
 
-    return render_template("partials/media_section.html", media_infos=nodes_data, prefix=Songs)
+    return render_template("partials/media_section.html", media_infos=nodes_data, prefix="song")
 
 
 @app.route('/query')
