@@ -216,9 +216,21 @@ def load_friends_recent_likes():
     return render_template("partials/media_section.html", media_infos=featured_songs)
 
 
-@app.route('/myplaylists')
+# Ruta para cargar la página playlists.html
+@app.route('/playlists')
 def load_playlists():
-    return render_template("partials/playlists.html", playlists=featured_songs)
+    # Aquí podrías agregar lógica para obtener datos de playlists si es necesario
+    playlists_data = [
+        {'name': 'Playlist 1', 'songs': ['Song A', 'Song B', 'Song C']},
+        {'name': 'Playlist 2', 'songs': ['Song X', 'Song Y', 'Song Z']}
+        # Agrega más datos según sea necesario
+    ]
+    return render_template('playlists.html', playlists=playlists_data)
+
+# Otras rutas y lógica de tu aplicación
+
+if __name__ == '__main__':
+    app.run(debug=True)
 
 
 @app.route('/home')

@@ -1,0 +1,15 @@
+{% extends "app_layout.html" %}
+
+{% block title %} Music {% endblock %}
+
+{% block content %}
+<div>
+
+</div>
+<h2>Mi Playlist </h2>
+<section class="featured horizontal_scroll recent_likes">
+    <span hx-get="/get/anime" hx-trigger="load" hx-swap="outerHTML">Loading more ...</span>
+</section>
+
+
+{% endblock %}
