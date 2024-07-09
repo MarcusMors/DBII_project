@@ -43,6 +43,7 @@
     <!-- HEADER -->
 
     <div class="header">
+      {%block header%}
       <span
         ><div href="/" class="logo_container">
           <img
@@ -55,43 +56,9 @@
         </div></span
       >
       <span><a href="#">Favourites</a></span>
-      <span><a href="#">Community</a></span>
 
       <div class="search_bar_container">
-        <form class="nav_bar_form" method="GET" hx-get="{{ url_for('search') }}" hx-target=".main" hx-swap="innerHTML">
-          <!-- <label for="search_type"></label> -->
-          <!-- Do it like IMDb search bar-->  
-          <select
-            id="search_type"
-            name="search_type"
-          >
-            <option value="All">All</option>
-            <option value="Users">Users</option>
-            <option value="Playlists">Playlists</option>
-            <option value="Songs">Songs</option>
-            <option value="Producer">Producers</option>
-          </select>
-          <input
-            type="text"
-            list="suggestions"
-            id="search_text"
-            name="search_text"
-            required
-            placeholder="Search"
-          />
-
-          <button type="submit" class="search_button" action="{{ url_for('search') }}">
-            <img
-              class="search_icon"
-              src="{{url_for('static', filename='assets/search_icon.svg')}}"
-              alt="search"
-            />
-          </button>
-
-          <datalist id="suggestions">
-            <!-- Default suggestions is none -->
-          </datalist>
-        </form>
+        {% include 'partials/search_bar.html' %}
       </div>
 
       <div class="header_icon_container" title="Friends"><img class="header_icon" src="{{url_for('static', filename='assets/friends_logo.png')}}" alt="Friends"></div>
@@ -107,9 +74,8 @@
                 <li><a href="{{ url_for('sign_out') }}">Logout</a></li>
             </ul>
         </div>
-    </div>
-    
-      {%block header%}{%endblock%}
+      </div>
+      {%endblock%}
     </div>
     <!-- End_HEADER -->
 
@@ -174,19 +140,40 @@
       </ul>
     </div>
     <!-- End_FOOTER -->
+
+    <script>
+//      document.getElementById('search_query').addEventListener('htmx:beforeRequest', function(event) {
+  //        console.log('Updated Request URL:', event.detail.target.href);
+  //      });
+
+  //document.addEventListener('htmx:beforeRequest', function(event) {
+    //  // Log the URL where the request is being sent to
+    //  console.log('Request URL:', event.detail.target.href);
+    //});
+    document.getElementById('search_query').addEventListener('htmx:beforeRequest', function(event) {
+      var currentUrl = event.detail.pathInfo.finalRequestPath;
+      //var currentUrl = event.detail.target.href;
+      console.log('Updated Request URL:', event.detail.pathInfo);
+      console.log('Updated Request URL:', event.detail.pathInfo.finalRequestPath);
+      if(typeof currentUrl !== 'undefined'){
+        var search_type = document.getElementById('search_type').value;
+        var params = new URLSearchParams(currentUrl);
+        console.log("params: ", params.toString() );
+
+        if (!params.has('search_type')) {
+          params.append('search_type', search_type);
+        } else {
+          params.set('search_type', search_type);
+        }
+        var url = {
+          pathname : currentUrl
+        }
+        event.detail.pathInfo.finalRequestPath = params.toString();
+      }
+      console.log('Endpoint:', event.detail.pathInfo.finalRequestPath);
+      });
+    </script>
   </body>
 
   {%block scripts%} {%endblock%}
 </html>
-
-<!-- <script>
-  function openNav() {
-    document.getElementById("sidebar").style.width = "250px";
-    document.getElementById("main").style.marginLeft = "250px";
-  }
-
-  function closeNav() {
-    document.getElementById("sidebar").style.width = "0";
-    document.getElementById("main").style.marginLeft= "0";
-  }
-</script> -->

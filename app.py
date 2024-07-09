@@ -4,7 +4,7 @@ from Neo4jDriver import Neo4jDriver
 from Queries import Queries
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key_here'  # Asegúrate de cambiar esto por una clave segura en producción
+app.secret_key = 'your_secret_key_here' 
 
 # Neo4j connection settings
 neo4jDriver = Neo4jDriver()
@@ -111,6 +111,23 @@ def validate_username():
     else:
         return ""
 
+users = {    "test@example.com": "password123"}##
+@app.route('/login', methods=['GET', 'POST'])##
+def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        
+        if email in users and users[email] == password:
+            flash('ingreso exitoso', 'success')
+            return redirect(url_for('index_root'))
+        else:
+            flash('email o pasword incorrecto. Vuelva a revisar', 'danger')
+            return redirect(url_for('login'))
+    
+    return render_template('login.html')
+
+
 
 @app.route('/songs/<song_name>')
 def show_song_name(song_name):
@@ -123,41 +140,58 @@ def show_song(song_name):
     user = {"username": song_name}
     return render_template('songpage.html', user=user)
 
-
+# @app.route('/search')
 @app.route('/search', methods=["GET"])
 def search():
-    search_type = request.args.get('search_type')
-    search_text = request.args.get('search_text')
+    search_query = request.args.get('search_query')
+    # trigger= request.headers.get("HX-Trigger")
+    target= request.headers.get("HX-Target")
+    search_type = request.args.get("search_type")
 
+    print(f"{ search_type = }")
+    print(f"{ search_query = }")
+    print(f"{ target = }")
     records = []
 
     if search_type == "All":
         pass
     if search_type == "Users":
-        records = neo4jDriver.search_artists(neo4jDriver, search_text)
+        records = neo4jDriver.search_artists(neo4jDriver,search_query)
     if search_type == "Playlists":
-        records = neo4jDriver.search_playlists(neo4jDriver, search_text)
+        records = neo4jDriver.search_playlists(neo4jDriver,search_query)
     if search_type == "Songs":
-        records = neo4jDriver.search_songs(neo4jDriver, search_text)
+        records = neo4jDriver.search_songs(neo4jDriver,search_query)
     if search_type == "Producer":
-        records = neo4jDriver.search_producer(neo4jDriver, search_text)
-
-    if not records:
-        return render_template("partials/no_matches_found.html")
+        records = neo4jDriver.search_producer(neo4jDriver,search_query)
 
     nodes_data = []
     for r in records:
         node_data = {"name": r["results"]}
         nodes_data.append(node_data)
 
-    return render_template("partials/media_section.html", media_infos=nodes_data)
+    if len(nodes_data) == 0:
+        print("NO MATCHES")
+        return render_template("partials/no_matches_found.html")
+
+
+    if target == "search_table":
+        print("HX-Target")
+        print(f"{ nodes_data = }")
+        return render_template("partials/search_rows.html", media_infos=nodes_data)
+
+    return render_template("partials/media_section.html",media_infos=nodes_data)
+    # return jsonify("hello this is my answer motherfucker")
+    # return render_template('songpage.html',user=user)
 
 
 @app.route('/song/search', methods=["POST"])
 def song_search():
-    search_text = request.form.get('search_text')
-
-    records = neo4jDriver.search_artists(neo4jDriver, search_text)
+    search_query = request.form.get('search_query')
+    print("-----------------------------------")
+    print(search_query)
+    print("-----------------------------------")
+    # search_type = request.form.get('search_type')
+    records = neo4jDriver.search_artists(neo4jDriver,search_query)
     nodes_data = []
     for r in records:
         node_data = {"name": r["names"]}
@@ -243,6 +277,14 @@ def not_found_error(error):
 def close_driver(exception):
     neo4jDriver.close()
 
+
+################################################################################
+#  Testing cosas
+################################################################################
+
+@app.route('/layout')
+def app_layout():
+    return render_template('app_layout.html')
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)

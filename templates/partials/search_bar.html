@@ -1,10 +1,53 @@
-<form action="/search" method="get" class="tool-bar">
-  <label for="search">Search Term</label>
-  <input id="search" type="search" name="q" value="{{ request.args.get('q') or '' }}" hx-get="/contacts"
-    hx-trigger="search, keyup delay:200ms changed" hx-target="tbody" />
+<form
+  class="nav_bar_form"
+  hx-get="{{ url_for('search') }}"
+  >
 
-  <input type="submit" value="Search" />
+  <select
+    id="search_type"
+    name="search_type"
+  >
+    <option value="All">All</option>
+    <option value="Users">Users</option>
+    <option value="Playlists">Playlists</option>
+    <option value="Songs">Songs</option>
+    <option value="Producer">Producers</option>
+  </select>
+
+  <input
+    id="search_query"
+    type="search"
+    name="search_query"
+    hx-get="{{ url_for('search') }}"
+    hx-trigger="search, keyup delay:200ms changed"
+    hx-target="#search_table"
+    hx-indicator="#spinner"
+    hx-swap="innerHTML"
+    required
+    placeholder="Search"
+    hx-include="#search_type"
+  />
+  <button type="submit" class="search_button" action="{{ url_for('search') }}">
+    <img
+      class="search_icon"
+      src="{{url_for('static', filename='assets/search_icon.svg')}}"
+      alt="search"
+    />
+  </button>
+  <!-- <input type="submit" value="Search" /> -->
 </form>
+
+<table>
+  <tbody id="search_table">
+    <tr>
+      <td>
+        <img id="spinner" class="htmx-indicator" src="/static/img/spinning-circles.svg" alt="Request in Flight...">
+      </td>
+    </tr>
+    <tr><td>rows will be added here</td></tr>
+  </tbody>
+</table>
+
 
 <!-- 
 things user might search:
