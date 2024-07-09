@@ -160,7 +160,17 @@ def search():
     if search_type == "All":
         pass
     if search_type == "Users":
-        records = neo4jDriver.search_artists(neo4jDriver,search_query)
+        if search_query == "__conocidos":
+            username = session.get("username")
+            records = neo4jDriver.get_usuario(neo4jDriver,username)
+            nodes_data = []
+            for r in records:
+                node_data = {"name": r["results"]}
+                nodes_data.append(node_data)
+            return render_template("partials/user_section.html",media_infos=nodes_data)
+        else:
+            records = neo4jDriver.search_artists(neo4jDriver,search_query)
+
     if search_type == "Playlists":
         records = neo4jDriver.search_playlists(neo4jDriver,search_query)
     if search_type == "Songs":

@@ -1,6 +1,8 @@
 <form
   class="nav_bar_form"
   hx-get="{{ url_for('search') }}"
+  hx-target=".main"
+  hx-swap="innerHTML"
   >
 
   <select
@@ -16,10 +18,10 @@
 
   <input
     id="search_query"
-    type="search"
+    type="text"
     name="search_query"
     hx-get="{{ url_for('search') }}"
-    hx-trigger="search, keyup delay:200ms changed"
+    hx-trigger="keyup delay:200ms changed"
     hx-target="#search_table"
     hx-indicator="#spinner"
     hx-swap="innerHTML"

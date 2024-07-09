@@ -22,9 +22,26 @@
     <span hx-get="/get/kpop" hx-trigger="load" hx-swap="outerHTML">Loading more ...</span>
 </section>
 
-<h2>Música que le gusta a tus amigos</h2>
+<h2>Mixed for you</h2>
 <section class="featured horizontal_scroll recent_likes">
-    <span hx-get="/friends/recent_likes" hx-trigger="load" hx-swap="outerHTML" hx-target="this">Loading more ...</span>
+    <span hx-get="/search?search_type=Playlists&search=liked_songs" hx-trigger="load" hx-swap="outerHTML" hx-target="this">Loading more ...</span>
+    <span hx-get="/search?search_type=Playlists&search=__discover_dance" hx-trigger="load" hx-swap="outerHTML" hx-target="this">Loading more ...</span>
+    <span hx-get="/search?search_type=Playlists&search=__discover_populars" hx-trigger="load" hx-swap="outerHTML" hx-target="this">Loading more ...</span>
+</section>
+
+<h2>Tus playlists</h2>
+<section class="featured horizontal_scroll recent_likes">
+    <span hx-get="/search?search_type=Playlists&search=__all_user_made" hx-trigger="load" hx-swap="outerHTML" hx-target="this">Loading more ...</span>
+</section>
+
+<h2>Artistas recomendados</h2>
+<section class="featured horizontal_scroll recent_likes">
+    <span hx-get="/search?search_type=Playlists&search=__all_user_made" hx-trigger="load" hx-swap="outerHTML" hx-target="this">Loading more ...</span>
+</section>
+
+<h2>Amigos recomendados</h2>
+<section class="featured horizontal_scroll recent_likes">
+    <span hx-get="/search?search_type=Users&search=__conocidos" hx-trigger="load" hx-swap="outerHTML" hx-target="this">Loading more ...</span>
 </section>
 
 {% endblock %}
