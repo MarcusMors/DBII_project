@@ -64,6 +64,44 @@ def sign_in():
     return render_template("signin.html")
 
 
+@app.route('/friends_page')
+def friends_page():
+    # Aquí podrías obtener la lista de amigos desde tu base de datos
+    friends = ['Amigo 1', 'Amigo 2', 'Amigo 3']  # Ejemplo de lista de amigos
+
+    # Renderizar el template friends_page.html y pasar la lista de amigos como contexto
+    return render_template('friends.html', friends=friends)
+
+def search_friends_by_name(username):
+    driver = Neo4jDriver()  # Instancia de tu clase Neo4jDriver
+
+    # Query para buscar usuarios que coincidan parcialmente con el nombre proporcionado
+    query = """
+    MATCH (u:Usuario)
+    WHERE u.nombre CONTAINS $username
+    RETURN u
+    """
+
+    results = driver.run(query, {"username": username})
+
+    # Transformar los resultados en una lista de nombres de usuarios (o como lo necesites)
+    friends = [record["u"]["nombre"] for record in results]
+
+    return friends
+
+# Ruta para manejar la búsqueda de amigos
+@app.route('/search_friends', methods=['GET', 'POST'])
+def search_friends():
+    if request.method == 'POST':
+        username = request.form.get('query', '')
+    else:
+        username = request.args.get('query', '')
+
+    # Llamar a la función para buscar amigos por nombre
+    friends = search_friends_by_name(username)
+
+    return render_template('friends_page.html', friends=friends)
+
 @app.route('/signout')
 def sign_out():
     global logged_user

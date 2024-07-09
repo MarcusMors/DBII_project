@@ -1,0 +1,26 @@
+{% extends "app_layout.html" %}
+
+{% block title %} Friends {% endblock %}
+
+{% block content %}
+
+<h1>Lista de Amigos</h1>
+
+<form action="{{ url_for('search_friends') }}" method="GET">
+    <input type="text" name="query" placeholder="Buscar amigos...">
+    <button type="submit">Buscar</button>
+</form>
+
+<ul>
+    {% for friend in friends %}
+    <li>
+        {{ friend.username }} <!-- Asumiendo que friend tiene un atributo username -->
+        <form action="{{ url_for('add_friend') }}" method="POST">
+            <input type="hidden" name="friend_id" value="{{ friend.id }}"> <!-- Asumiendo que friend tiene un atributo id -->
+            <button type="submit">Añadir a amigos</button>
+        </form>
+    </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}
