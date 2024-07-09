@@ -131,14 +131,40 @@ def login():
 
 @app.route('/songs/<song_name>')
 def show_song_name(song_name):
-    user = {"username": song_name}
-    return render_template('songpage.html', user=user)
+    song_raw = neo4jDriver.get_song(neo4jDriver, song_name)
+    print(f"{ song_raw = }")
+    song = {
+        "genre":song_raw[0],
+        "data":{
+            "name": song_raw[1][0],
+            "top_streak": song_raw[1][1],
+            "reproducciones": song_raw[1][2],
+            "duration_ms": song_raw[1][3],
+            "date": song_raw[1][4],
+        },
+        "danceability": song_raw[2], # danceability (0-100) # 60% de las personas bailan esta cancion
+        "top_rank":song_raw[3],
+        "authors":song_raw[4],
+        "producer":song_raw[5],
+        "appears_in_playlists":song_raw[6], # lista Playlists con esa canción
+        "related_songs":song_raw[7],
+    }
+    return render_template('songpage.html', song=song)
 
 
-@app.route('/user/<song_name>')
-def show_song(song_name):
-    user = {"username": song_name}
-    return render_template('songpage.html', user=user)
+@app.route('/user/<username>')
+def show_song(username):
+    records = neo4jDriver.buscar_usuario(neo4jDriver,username)
+
+    nodes_data = []
+    for r in records:
+        node_data = {"name": r["results"]}
+        nodes_data.append(node_data)
+
+    if len(nodes_data) == 0:
+        return render_template("errors/404.html")
+
+    return render_template('user_profile.html', user=user)
 
 # @app.route('/search')
 @app.route('/search', methods=["GET"])
@@ -165,8 +191,9 @@ def search():
                 nodes_data.append(node_data)
             return render_template("partials/user_section.html",media_infos=nodes_data)
         else:
-            records = neo4jDriver.search_artists(neo4jDriver,search_query)
-
+            records = neo4jDriver.buscar_usuario(neo4jDriver,search_query)
+    if search_type == "Artists":
+        records = neo4jDriver.buscar_artists(neo4jDriver,search_query)
     if search_type == "Playlists":
         records = neo4jDriver.search_playlists(neo4jDriver,search_query)
     if search_type == "Songs":
@@ -183,13 +210,12 @@ def search():
         print("NO MATCHES")
         return render_template("partials/no_matches_found.html")
 
-
     if target == "search_table":
         print("HX-Target")
         print(f"{ nodes_data = }")
         return render_template("partials/search_rows.html", media_infos=nodes_data)
 
-    return render_template("partials/media_section.html",media_infos=nodes_data)
+    return render_template("partials/media_section.html",media_infos=nodes_data, prefix=search_type)
     # return jsonify("hello this is my answer motherfucker")
     # return render_template('songpage.html',user=user)
 
@@ -218,7 +244,7 @@ def load_featured():
 
 @app.route('/friends/recent_likes')
 def load_friends_recent_likes():
-    return render_template("partials/media_section.html", media_infos=featured_songs)
+    return render_template("partials/media_section.html", media_infos=featured_songs, prefix=Songs)
 
 
 @app.route('/myplaylists')
@@ -245,7 +271,7 @@ def get_kpop():
         node_data = {"name": r["names"]}
         nodes_data.append(node_data)
 
-    return render_template("partials/media_section.html", media_infos=nodes_data)
+    return render_template("partials/media_section.html", media_infos=nodes_data, prefix=Songs)
 
 
 @app.route('/get/anime')
@@ -257,7 +283,7 @@ def get_anime():
         node_data = {"name": r["names"]}
         nodes_data.append(node_data)
 
-    return render_template("partials/media_section.html", media_infos=nodes_data)
+    return render_template("partials/media_section.html", media_infos=nodes_data, prefix=Songs)
 
 
 @app.route('/query')

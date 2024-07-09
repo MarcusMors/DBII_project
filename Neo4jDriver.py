@@ -422,6 +422,31 @@ class Neo4jDriver:
 
         """
         return self.query(cypher, {"lista": lista,"cancion":cancion})
+
+    @staticmethod
+    def buscar_usuario(self, search_string):
+        # cypher = (
+        # "MATCH (u:Usuario) "
+        # "WHERE toLower(u.nombre) =~ '.*{nombre: $usuario}.*' "
+        # "RETURN u.nombre AS results LIMIT 5 "
+        # " "
+        # " "
+        # )
+        cypher = (
+            "MATCH (u:Usuario) "
+            "WHERE toLower(u.nombre) =~ '.*$search_string.*' "
+            "RETURN u.nombre AS results LIMIT 5 "
+            " "
+            " "
+        )
+
+        final_query = construct_raw_query(cypher,{"search_string": search_string})
+        print("final_query = ")
+        print(final_query)
+
+        result= self.query(final_query)
+        return result
+
 driver=Neo4jDriver()
 
 #print(driver.get_nodes(driver))

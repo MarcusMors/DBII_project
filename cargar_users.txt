@@ -1,0 +1,24 @@
+LOAD CSV WITH HEADERS FROM 'file:///usuarios.csv' AS row
+
+MERGE (usuario:Usuario {nombre: row.user})
+ON CREATE SET 
+    usuario.correo = row.correo,
+    usuario.contra = row.contra
+
+MERGE (playlist:Playlist {nombre: row.playlist})
+
+MERGE (usuario)-[:CREA]->(playlist);
+
+
+LOAD CSV WITH HEADERS FROM 'file:///playlist.csv' AS row
+
+MATCH (playlist:Playlist {nombre: row.playlist})
+MATCH (cancion:Cancion {track_name: row.track_name})
+MERGE (playlist)-[:OBTIENE]->(cancion);
+
+
+LOAD CSV WITH HEADERS FROM 'file:///friend.csv' AS row
+
+MATCH (usuario:Usuario {nombre: row.user})
+MATCH (amigo:Usuario {nombre: row.friend})
+MERGE (usuario)-[:AMISTAD]->(amigo);

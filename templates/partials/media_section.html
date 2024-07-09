@@ -1,6 +1,6 @@
 {% for m in media_infos %}
 <div class="media_element">
   <img src="{{url_for('static', filename='assets/corchea.jpg')}}" alt="Corchea">
-  <p><a href="songs/{{m.name}}">{{m.name}}</a></p>
+  <p><a href="{{prefix}}/{{m.name}}">{{m.name}}</a></p>
 </div>
 {% endfor %}

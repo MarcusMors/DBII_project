@@ -1,0 +1,85 @@
+REALIZAR LA CONSULTA PARA AGREGAR LOS CORREOS Y CONTRAS
+agregar correos y contras a los usuarios
+
+LOAD CSV WITH HEADERS FROM 'file:///usuarios.csv' AS row
+MATCH (u:Usuario {nombre: row.user})
+SET u.correo = row.Correo, u.contraseña = row.Contra
+
+
+///////////////////////////////////////
+*RECOMENDACION NO USAR O SINO VERIFICAR SI FFUNCIONA EL USUARIO TOMAS(A MI NO ME LO RECONOCE MEJOR NO LO USEN)
+*SE TIENE QUE PONER DOBLE RELACION DE AMISTAD ENTRE AMIGOS*(LA CONSULTA SI LO TIENE PERO SE DEBE REALLIZAR PARA LOS USUARIOS QUE SE ENCUENTRAN EN LA DB)
+TODO LO RELACIONADO A USUARIOS 
+crear usuario 
+
+CREATE (u:Usuario {nombre: 'ramon', correo: 'ramon@gmail.com', contraseña: 'ramon'})
+
+recuperar contrase;a por usuario o correo
+
+MATCH (u:Usuario {nombre: 'Jorge'})
+RETURN u.contraseña
+
+MATCH (u:Usuario {correo: 'jorge@gmail.com'})
+RETURN u.contraseña
+
+agregar relacion de amistad (como aceptar solicitud)
+
+MATCH (u1:Usuario {nombre: 'Santiago'})
+MATCH (u2:Usuario {nombre: 'Marco'})
+MERGE (u1)-[:AMISTAD]->(u2)
+MERGE (u2)-[:AMISTAD]->(u1)
+
+generar solicitud de amistad
+MATCH (u1:Usuario {nombre: 'Santiago'})//tu usuario
+MATCH (u2:Usuario {nombre: 'ramon'})//quien recibe la solicitud
+MERGE (u1)-[:SOLICITUD]->(u2)
+
+eliminar la solicitud de amistad(ya sea para crear la amistad o cancelar la solicitud)
+MATCH (u1:Usuario {nombre: 'Santiago'})-[r:SOLICITUD]-(u2:Usuario {nombre: 'ramon'})
+DELETE r
+
+obsesrvar los amigos de mis amigos*(para mandar solicitudes)
+MATCH (u:Usuario {nombre: 'Pedro'})-[:AMISTAD]->(amigo)-[:AMISTAD]->(conocido)
+WHERE conocido <> u
+RETURN conocido.nombre AS conocidos
+
+mostrar usuarios para mandar solicitudes*(caso no sea de amigos de amigos)
+MATCH (u:Usuario)
+WHERE toLower(u.nombre) CONTAINS 'santiago'
+RETURN u
+
+mostrar canciones que le gustan a tus amigos*(que tu no tienes agregadas)
+MATCH (yo:Usuario {nombre: 'Pedro'})-[:AMISTAD]->(amigo:Usuario)-[:CREA]->(lista:Playlist)-[:OBTIENE]->(cancion:Cancion)
+WHERE NOT (yo)-[:CREA]->(:Playlist)-[:OBTIENE]->(cancion)
+RETURN DISTINCT cancion.track_name AS Cancion
+ORDER BY cancion.track_name
+
+LISTAS
+mostrar la lista, el creador, y las canciones (esto busca por el nombre de la lista) 
+MATCH (u:Usuario)-[:CREA]->(p:Playlist {nombre: 'Musica4'})-[:OBTIENE]->(c:Cancion)
+RETURN p.nombre AS Lista, u.nombre AS Creador, collect(c.track_name) AS Canciones
+
+agregar cancion a la lista 
+MATCH (p:Playlist {nombre: 'Musica4'})
+MATCH (c:Cancion {track_name: 'Tally'})
+MERGE (p)-[:OBTIENE]->(c)
+
+eliminar cancion
+MATCH (p:Playlist {nombre: 'Musica4'})-[r:OBTIENE]->(c:Cancion {track_name: 'Step Back'})
+DELETE r
+
+mostrar canciones que te pueden gustar viendo los generos que tienes en la lista
+MATCH (p:Playlist {nombre: 'Musica4'})-[:OBTIENE]->(c:Cancion)-[:PERTENECE_A]->(g:Genero)
+MATCH (c2:Cancion)-[:PERTENECE_A]->(g)
+WHERE NOT (p)-[:OBTIENE]->(c2)
+RETURN c2.track_name AS Cancion
+ORDER BY c2.nombre
+
+
+CANCIONES
+mostrar canciones relacionadas a la cancion por genero *(si entra a una cancion)
+MATCH (cancion:Cancion {track_name: 'Tally'})-[:PERTENECE_A]->(genero:Genero)
+MATCH (otraCancion:Cancion)-[:PERTENECE_A]->(genero)
+WHERE cancion <> otraCancion
+RETURN DISTINCT otraCancion.track_name AS CancionRelacionada
+ORDER BY otraCancion.track_name

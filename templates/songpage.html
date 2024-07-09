@@ -1,14 +1,18 @@
 {% extends "base.html" %}
 
-{% block title %} {{user.username}} {% endblock %}
+{% block title %} {{song.data.name}} {% endblock %}
 
 {% block content %}
-<h1>Esta es la página de la canción, {{ user.username }}!</h1>
-<ul>
-  {% for item in items %}
-  <li>{{ item }}</li>
-  {% endfor %}
-</ul>
+<div>
+  <h1>{{ song.data.name }}!</h1>
+  <span>
+    {% for author in song.authors %}
+      <span>{{ author }}</span>
+    {% endfor %}
+    <span>*</span>
+    <span>{{ song.producer }}</span>
+  </span>
+</div>
 
-<h2>Esta es la página de la canción, {{ user.username }}!</h2>
+<h2>Esta es la página de la canción, {{ song.name }}!</h2>
 {% endblock %}
