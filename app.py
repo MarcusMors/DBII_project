@@ -64,6 +64,17 @@ def sign_in():
     return render_template("signin.html")
 
 
+# Ruta para la página de amigos y búsqueda de amigos
+@app.route('/friends')
+def friends_page():
+    # Aquí podrías obtener la lista de amigos desde tu base de datos
+    friends = ['Amigo 1', 'Amigo 2', 'Amigo 3']  # Ejemplo de lista de amigos
+
+    # Renderizar el template friends.html y pasar la lista de amigos como contexto
+    return render_template('friends.html', friends=friends)
+
+
+
 @app.route('/signout')
 def sign_out():
     global logged_user
@@ -219,18 +230,11 @@ def load_friends_recent_likes():
 # Ruta para cargar la página playlists.html
 @app.route('/playlists')
 def load_playlists():
+    username = session.get('username')
+    lista = neo4jDriver.get_lista(neo4jDriver,username)
     # Aquí podrías agregar lógica para obtener datos de playlists si es necesario
-    playlists_data = [
-        {'name': 'Playlist 1', 'songs': ['Song A', 'Song B', 'Song C']},
-        {'name': 'Playlist 2', 'songs': ['Song X', 'Song Y', 'Song Z']}
-        # Agrega más datos según sea necesario
-    ]
-    return render_template('playlists.html', playlists=playlists_data)
+    return render_template('playlists.html', playlists=lista)
 
-# Otras rutas y lógica de tu aplicación
-
-if __name__ == '__main__':
-    app.run(debug=True)
 
 
 @app.route('/home')

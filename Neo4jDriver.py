@@ -322,6 +322,16 @@ class Neo4jDriver:
 
         return posible_conocido,amigos,canciones_amigos,artistas_amigos,listas
     #lista,lista,lista,lista,lista
+    
+    @staticmethod
+    def search_usuario(self, search_string , limit=5):
+        cypher = (
+        "MATCH (n:Usuario)"
+        "WHERE n.nombre contains $search_string"
+        "RETURN n.nombre AS names LIMIT $limit"
+        )
+        return self.query(cypher, {"limit": limit})
+    
     @staticmethod
     def send_request_friend(self,usuario,conocido):
         cypher = """
@@ -343,13 +353,7 @@ class Neo4jDriver:
 
     @staticmethod
     def accept_request_friend(self,usuario,conocido):
-        cypher_delete = """
-        MATCH (u1:Usuario {nombre: $conocido })-[r:SOLICITUD]-(u2:Usuario {nombre: $usuario})
-        DELETE r
-        """
-        self.query(cypher_delete, {"usuario": usuario, "conocido": conocido})
-        
-        
+     
         cypher = """
         MATCH (u1:Usuario {nombre: $usuario})
         MATCH (u2:Usuario {nombre: $conocido})
@@ -461,6 +465,20 @@ class Neo4jDriver:
         artist = result[0]["nombre"]
 
         return artist
+    
+    @staticmethod
+    def get_lista(self,usuario):
+
+        cypher = """
+        MATCH (u:Usuario {nombre: $usuario})-[:CREA]->(p:Playlist)
+        RETURN collect(p.nombre) AS Lista
+
+        """
+        result= self.query(cypher, {"usuario": usuario})
+        listas = result[0]["Lista"]
+
+
+        return listas
     
 driver=Neo4jDriver()
 

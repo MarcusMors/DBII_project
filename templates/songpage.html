@@ -1,14 +1,17 @@
 {% extends "base.html" %}
 
-{% block title %} {{user.username}} {% endblock %}
+{% block title %} Song Page - {{ song.name }} {% endblock %}
 
 {% block content %}
-<h1>Esta es la página de la canción, {{ user.username }}!</h1>
-<ul>
-  {% for item in items %}
-  <li>{{ item }}</li>
-  {% endfor %}
-</ul>
+<div class="song-details">
+    <h1>{{ song.name }}</h1>
+    <p>Artist: {{ song.artist }}</p>
+    <p>Genre: {{ song.genre }}</p>
+    <img src="{{ song.image_url }}" alt="Song Image" width="300">
+</div>
 
-<h2>Esta es la página de la canción, {{ user.username }}!</h2>
+<form action="{{ url_for('add_to_playlist', song_id=song.id) }}" method="POST">
+    <button type="submit">Add to Playlist</button>
+</form>
+
 {% endblock %}
