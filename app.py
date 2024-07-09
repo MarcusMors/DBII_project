@@ -80,17 +80,17 @@ def show_song(song_name):
     return render_template('songpage.html',user=user)
 #### IDK WHAT TO DO WITH THIS
 
-
 # @app.route('/search')
 @app.route('/search', methods=["GET"])
 def search():
-    search_type = request.args.get('search_type')
     search_query = request.args.get('search_query')
-    trigger= request.headers.get("HX-Trigger")
+    # trigger= request.headers.get("HX-Trigger")
+    target= request.headers.get("HX-Target")
+    search_type = request.args.get("search_type")
 
     print(f"{ search_type = }")
     print(f"{ search_query = }")
-    print(f"{ trigger = }")
+    print(f"{ target = }")
     records = []
 
     if search_type == "All":
@@ -110,13 +110,13 @@ def search():
         node_data = {"name": r["results"]}
         nodes_data.append(node_data)
 
-    if records is None:
+    if len(nodes_data) == 0:
         print("NO MATCHES")
         return render_template("partials/no_matches_found.html")
 
 
-    if request.headers.get("HX-Trigger") == "search":
-        print("HX-TRIGGER")
+    if target == "search_table":
+        print("HX-Target")
         print(f"{ nodes_data = }")
         return render_template("partials/search_rows.html", media_infos=nodes_data)
 

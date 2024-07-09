@@ -52,8 +52,8 @@ class Neo4jDriver:
     @staticmethod
     def get_canciones_de_genero_anime(self, limit=5):
         cypher = (
-            "MATCH (c:Cancion)-[:PERTENECE_A]->(g1:Genero {nombre: 'anime'});"
-            "RETURN c.track_name AS names LIMIT 5;"
+            "MATCH (c:Cancion)-[:PERTENECE_A]->(g1:Genero {nombre: 'anime'}) "
+            "RETURN c.track_name AS names LIMIT 5 "
             )
         # cypher = (
         #     "MATCH (c:Cancion)-[:PERTENECE_A]->(g1:Genero {nombre: 'anime'})"
