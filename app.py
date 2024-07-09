@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template, request, url_for
+from flask import Flask, jsonify, render_template, request, url_for,flash,redirect,session
 
 from Neo4jDriver import Neo4jDriver
 from Queries import Queries
@@ -75,12 +75,14 @@ def login():
         
         if email in users and users[email] == password:
             flash('ingreso exitoso', 'success')
+            session['user'] = email
             return redirect(url_for('index_root'))
         else:
             flash('email o pasword incorrecto. Vuelva a revisar', 'danger')
             return redirect(url_for('login'))
     
     return render_template('login.html')
+
 
 
 
