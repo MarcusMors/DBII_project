@@ -5,6 +5,13 @@ from dotenv import load_dotenv
 from neo4j import GraphDatabase
 
 
+def construct_raw_query(query, parameters):
+    for key, value in parameters.items():
+        if isinstance(value, str):
+            value = f"{value}"
+        query = query.replace(f"${key}", str(value))
+    return query
+
 # Clase de utilidad para manejar la sesión de Neo4j
 class Neo4jDriver:
     def __init__(self):
@@ -24,6 +31,7 @@ class Neo4jDriver:
         self.driver.close()
 
     def query(self, cypher, parameters=None):
+        print(f"{parameters = }")
         with self.driver.session() as session:
             result = session.run(cypher, parameters)
             return [record for record in result]
@@ -71,14 +79,28 @@ class Neo4jDriver:
         # )
         cypher = (
         "MATCH (cancion:Cancion) "
-        "WHERE toLower(cancion.track_name)  =~ '.*\\\\ba\\\\b.*' "
-        "RETURN cancion.track_name AS results LIMIT $limit "
+        "WHERE toLower(cancion.track_name) =~ '.*$search_string.*' "
+        "RETURN cancion.track_name AS results LIMIT 5 "
         )
+        # cypher = (
+        # "MATCH (cancion:Cancion) "
+        # "WHERE toLower(cancion.track_name)  =~ '.*\\\\ba\\\\b.*' "
+        # "RETURN cancion.track_name AS results LIMIT $limit "
+        # )
         # cypher = (
         # "MATCH (cancion:Cancion) "
         # "WHERE toLower(cancion.track_name)  =~ '.*\\\\b$search_string\\\\b.*' "
         # "RETURN cancion.track_name AS results LIMIT $limit "
         # )
+        print(f"{search_string = }, {limit = }")
         print("cypher = ")
         print(cypher)
-        return self.query(cypher, {"search_string": search_string, "limit": limit})
+        parameters = {
+            "search_string": search_string,
+            "limit": limit
+        }
+        final_query = construct_raw_query(cypher, parameters)
+        print("final_query = ")
+        print(final_query)
+
+        return self.query(final_query, parameters)
